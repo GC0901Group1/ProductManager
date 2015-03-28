@@ -18,6 +18,7 @@ import java.util.List;
  */
 public class ProductManagement {
 
+    private Connection conn;
     private List<Product> productList = new ArrayList<>();
     private ResultSet rs;
 
@@ -29,14 +30,22 @@ public class ProductManagement {
         this.productList = productList;
     }
 
-    public List<Product> getProduct() {
+    public Connection getConnection() {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://PHUC-PC:1433;databaseName=ShoppingMVC";
             String id = "sa";
             String pass = "123456";
-            Connection conn = DriverManager.getConnection(url, id, pass);
-            PreparedStatement ps = conn.prepareStatement("select * from Product");
+            conn = DriverManager.getConnection(url, id, pass);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return conn;
+    }
+
+    public List<Product> getProduct() {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement("select * from Product");
             rs = ps.executeQuery();
             while (rs.next()) {
                 Product productInfo = new Product();
@@ -50,18 +59,13 @@ public class ProductManagement {
         }
         return productList;
     }
-    
-    public void deleteProduct(String name){
-        try{
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            String url = "jdbc:sqlserver://HOANGHANGUYEN:1433;databaseName=ShoppingMVC";
-            String id = "sa";
-            String pass = "123456";
-            Connection conn = DriverManager.getConnection(url, id, pass);
-            PreparedStatement ps = conn.prepareStatement("delete from Product where ProductName =?");
+
+    public void deleteProduct(String name) {
+        try {
+            PreparedStatement ps = getConnection().prepareStatement("delete Product where ProductName =?");
             ps.setString(1, name);
             ps.executeUpdate();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
