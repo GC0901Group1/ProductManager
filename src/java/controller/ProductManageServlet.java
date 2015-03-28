@@ -7,12 +7,16 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.Product;
+import model.ProductManagement;
 
 /**
  *
@@ -20,6 +24,16 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "ProductManageServlet", urlPatterns = {"/ProductManageServlet"})
 public class ProductManageServlet extends HttpServlet {
+
+    private List<Product> productList = new ArrayList<>();
+
+    public List<Product> getProductList() {
+        return productList;
+    }
+
+    public void setProductList(List<Product> productList) {
+        this.productList = productList;
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -75,11 +89,18 @@ public class ProductManageServlet extends HttpServlet {
             throws ServletException, IOException {
         String buttonName = request.getParameter("button");
         if (buttonName.equals("Edit")) {
-           
+
         } else if (buttonName.equals("Delete")) {
-           
+            String name = request.getParameter("productName");
+            ProductManagement manage = new ProductManagement();
+            manage.deleteProduct(name);
+            productList = manage.getProduct();
+            request.setAttribute("listProduct", productList);
+            RequestDispatcher rd = request.getRequestDispatcher("welcome.jsp");
+            rd.forward(request, response);
+
         } else if (buttonName.equals("Add new product")) {
-            
+
         }
     }
 

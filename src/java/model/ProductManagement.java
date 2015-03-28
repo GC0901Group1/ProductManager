@@ -51,7 +51,7 @@ public class ProductManagement {
         return productList;
     }
     
-    public List<Product> deleteProduct(){
+    public void deleteProduct(String name){
         try{
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             String url = "jdbc:sqlserver://HOANGHANGUYEN:1433;databaseName=ShoppingMVC";
@@ -59,17 +59,10 @@ public class ProductManagement {
             String pass = "123456";
             Connection conn = DriverManager.getConnection(url, id, pass);
             PreparedStatement ps = conn.prepareStatement("delete from Product where ProductName =?");
-            rs = ps.executeQuery();
-            while (rs.next()) {
-                Product productInfo = new Product();
-                productInfo.setProductName(rs.getString("ProductName"));
-                productInfo.setManufacture(rs.getString("Manufacture"));
-                productInfo.setPrice(rs.getInt("Price"));
-                productList.add(productInfo);
-            }
+            ps.setString(1, name);
+            ps.executeUpdate();
         }catch(Exception e){
             e.printStackTrace();
         }
-        return productList;
     }
 }

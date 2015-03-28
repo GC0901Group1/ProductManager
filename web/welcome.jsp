@@ -11,10 +11,19 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Product Management</title>
+        <script>
+            function submitter(btn) {
+                var productName = btn.parentElement.parentElement.id;
+                var myForm = document.forms["myForm"];
+                myForm.elements["productName"].value = productName;
+                myForm.submit();
+            }
+        </script>
     </head>
     <body>
-        <form action="ProductManageServlet" method="post">
+        <form id ="myForm" action="ProductManageServlet" method="post">
             Product List:<br/><br/>
+            <input type="hidden" name="productName"/>
             <table border="1">
                 <tr>
                     <td>Product Name</td>
@@ -24,12 +33,12 @@
                     <td></td>
                 </tr>
                 <c:forEach items="${listProduct}" var="product">
-                    <tr>
+                    <tr id="${product.productName}">
                         <td>${product.productName}</td>
                         <td>${product.manufacture}</td>
                         <td>${product.price}</td>
-                        <td><input type="submit" name="button" value="Edit"/></td>
-                        <td><input type="submit" name="button" value="Delete"/></td>
+                        <td><input type="submit" name="button" value="Edit" onclick="submitter(this)"/></td>
+                        <td><input type="submit" name="button" value="Delete" onclick="submitter(this)"/></td>
                     </tr>
                 </c:forEach>
             </table>
